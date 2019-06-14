@@ -43,11 +43,15 @@ defmodule Cards do
   end
 
   def load(filename) do
-    {status , binary } = File.read(filename)
-
-    case status do
-      :ok -> :erlang.binary_to_term(binary)
-      :error -> "File does not exists"
+    case File.read(filename) do
+      {:ok , binary} -> :erlang.binary_to_term(binary)
+      {:error , _reason} -> "File does not exists"
     end
+  end
+
+  def create_hand(hand_size) do
+    Cards.create_desk
+    |> Cards.shuffle
+    |> Cards.deal_with(hand_size)
   end
 end
