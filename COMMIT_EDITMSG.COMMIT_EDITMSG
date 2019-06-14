@@ -1,0 +1,215 @@
+
+
+# Readme change
+# --------------
+# Please enter the commit message for your changes. Everything below
+# this paragraph is ignored, and an empty message aborts the commit.
+# Just close the window to accept your message.
+diff --git a/.formatter.exs b/.formatter.exs
+new file mode 100644
+index 0000000..d2cda26
+--- /dev/null
++++ b/.formatter.exs
+@@ -0,0 +1,4 @@
++# Used by "mix format"
++[
++  inputs: ["{mix,.formatter}.exs", "{config,lib,test}/**/*.{ex,exs}"]
++]
+diff --git a/.gitignore b/.gitignore
+new file mode 100644
+index 0000000..6f6ce8e
+--- /dev/null
++++ b/.gitignore
+@@ -0,0 +1,10 @@
++###Elixir###
++
++/_build
++/cover
++/deps
++/doc
++/.fetch
++erl_crash.dump
++*.ez
++*.beam
+\ No newline at end of file
+diff --git a/README.md b/README.md
+new file mode 100644
+index 0000000..870bd4e
+--- /dev/null
++++ b/README.md
+@@ -0,0 +1,21 @@
++# Cards
++
++**TODO: Add description**
++
++## Installation
++
++If [available in Hex](https://hex.pm/docs/publish), the package can be installed
++by adding `cards` to your list of dependencies in `mix.exs`:
++
++```elixir
++def deps do
++  [
++    {:cards, "~> 0.1.0"}
++  ]
++end
++```
++
++Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
++and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
++be found at [https://hexdocs.pm/cards](https://hexdocs.pm/cards).
++
+diff --git a/config/config.exs b/config/config.exs
+new file mode 100644
+index 0000000..750f7e1
+--- /dev/null
++++ b/config/config.exs
+@@ -0,0 +1,30 @@
++# This file is responsible for configuring your application
++# and its dependencies with the aid of the Mix.Config module.
++use Mix.Config
++
++# This configuration is loaded before any dependency and is restricted
++# to this project. If another project depends on this project, this
++# file won't be loaded nor affect the parent project. For this reason,
++# if you want to provide default values for your application for
++# 3rd-party users, it should be done in your "mix.exs" file.
++
++# You can configure your application as:
++#
++#     config :cards, key: :value
++#
++# and access this configuration in your application as:
++#
++#     Application.get_env(:cards, :key)
++#
++# You can also configure a 3rd-party app:
++#
++#     config :logger, level: :info
++#
++
++# It is also possible to import configuration files, relative to this
++# directory. For example, you can emulate configuration per environment
++# by uncommenting the line below and defining dev.exs, test.exs and such.
++# Configuration from the imported file will override the ones defined
++# here (which is why it is important to import them last).
++#
++#     import_config "#{Mix.env()}.exs"
+diff --git a/lib/cards.ex b/lib/cards.ex
+new file mode 100644
+index 0000000..fcd57d8
+--- /dev/null
++++ b/lib/cards.ex
+@@ -0,0 +1,53 @@
++defmodule Cards do
++  @moduledoc """
++  Documentation for Cards.
++  """
++
++  @doc """
++  Hello world.
++
++  ## Examples
++
++      iex> Cards.hello()
++      :world
++
++  """
++  def hello do
++    :world
++  end
++
++  def create_desk do
++    decks = ["Ace" , "TWO" , "THREE"]
++    suits = ["Spades" , "Clubs" , "Hearts" , "Diamonds"]
++
++    for deck <- decks , suit <- suits do
++      "#{deck} of #{suit}"
++    end
++  end
++
++  def shuffle(deck) do
++    Enum.shuffle(deck)
++  end
++
++  def contains?(deck , hand) do
++    Enum.member?(deck, hand)
++  end
++
++  def deal_with(deck , hand_size) do
++    Enum.split(deck, hand_size)
++  end
++
++  def save(deck , filename) do
++    binary = :erlang.term_to_binary(deck)
++    File.write(filename, binary)
++  end
++
++  def load(filename) do
++    {status , binary } = File.read(filename)
++
++    case status do
++      :ok -> :erlang.binary_to_term(binary)
++      :error -> "File does not exists"
++    end
++  end
++end
+diff --git a/mix.exs b/mix.exs
+new file mode 100644
+index 0000000..3c2f016
+--- /dev/null
++++ b/mix.exs
+@@ -0,0 +1,28 @@
++defmodule Cards.MixProject do
++  use Mix.Project
++
++  def project do
++    [
++      app: :cards,
++      version: "0.1.0",
++      elixir: "~> 1.7",
++      start_permanent: Mix.env() == :prod,
++      deps: deps()
++    ]
++  end
++
++  # Run "mix help compile.app" to learn about applications.
++  def application do
++    [
++      extra_applications: [:logger]
++    ]
++  end
++
++  # Run "mix help deps" to learn about dependencies.
++  defp deps do
++    [
++      # {:dep_from_hexpm, "~> 0.3.0"},
++      # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"},
++    ]
++  end
++end
+diff --git a/my_deck b/my_deck
+new file mode 100644
+index 0000000..27a54da
+Binary files /dev/null and b/my_deck differ
+diff --git a/test/cards_test.exs b/test/cards_test.exs
+new file mode 100644
+index 0000000..dc7ad14
+--- /dev/null
++++ b/test/cards_test.exs
+@@ -0,0 +1,8 @@
++defmodule CardsTest do
++  use ExUnit.Case
++  doctest Cards
++
++  test "greets the world" do
++    assert Cards.hello() == :world
++  end
++end
+diff --git a/test/test_helper.exs b/test/test_helper.exs
+new file mode 100644
+index 0000000..869559e
+--- /dev/null
++++ b/test/test_helper.exs
+@@ -0,0 +1 @@
++ExUnit.start()
